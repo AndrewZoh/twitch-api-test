@@ -16,7 +16,7 @@ class CreateGamesTable extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->increments('game_id');
             $table->string('name', 255);
-            $table->integer('twitch_id')->nullable();
+            $table->integer('twitch_game_id')->nullable();
             $table->timestamps();
         });
     }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b022441d7c21b9853f705e10c522589e",
+    "content-hash": "82fd76fcaccfaac64b5967243f2c27ed",
     "packages": [
         {
             "name": "defuse/php-encryption",
@@ -1981,6 +1981,52 @@
                 "uuid"
             ],
             "time": "2018-01-20T00:28:24+00:00"
+        },
+        {
+            "name": "skydiver/laravel-route-blocker",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/skydiver/laravel-route-blocker.git",
+                "reference": "38d3eec7c1216efd7c8d072ed41d641bf427b949"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/skydiver/laravel-route-blocker/zipball/38d3eec7c1216efd7c8d072ed41d641bf427b949",
+                "reference": "38d3eec7c1216efd7c8d072ed41d641bf427b949",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": ">=5.1",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Skydiver\\LaravelRouteBlocker\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Martín M.",
+                    "homepage": "http://flydev.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Block routes by IP",
+            "homepage": "https://github.com/skydiver/laravel-route-blocker",
+            "keywords": [
+                "block",
+                "laravel",
+                "php",
+                "routes",
+                "security"
+            ],
+            "time": "2017-08-30T14:29:45+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

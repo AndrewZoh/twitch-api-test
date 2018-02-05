@@ -21,6 +21,11 @@ class Stream extends Model
      * @var array
      */
     protected $fillable = [
-        'channel_id', 'game', 'service', 'viewer_count',
+        'channel_id',
+        'game',
+        'service',
+        'viewer_count',
+        'twitch_game_id',
+        'is_current',
     ];
 }
