@@ -15,7 +15,7 @@ class CreateStreamsTable extends Migration
     {
         Schema::create('streams', function (Blueprint $table) {
             $table->increments('stream_id');
-            $table->integer('twitch_stream_id');
+            $table->char('twitch_stream_id', 50);
             $table->char('channel_id', 50);
             $table->string('game', 255);
             $table->string('service', 255)->default('twitch');

@@ -25,7 +25,7 @@ class Stream extends Model
         'game',
         'service',
         'viewer_count',
-        'twitch_game_id',
+        'twitch_stream_id',
         'is_current',
     ];
 }
