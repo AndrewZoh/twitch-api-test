@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware(['auth:api', 'whitelist:first_group'])->group(function () {
+Route::middleware([/*'auth:api', */'whitelist:first_group'])->group(function () {
     Route::get('/streams', 'ApiController@streams');
 
     Route::get('/streams/count', 'ApiController@streamsCount');

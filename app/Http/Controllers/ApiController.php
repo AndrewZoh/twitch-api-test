@@ -7,22 +7,33 @@ use App\Stream;
 
 class ApiController extends Controller
 {
-    protected $request;
+    protected $games, $dateFrom, $dateTo;
 
     public function __construct(Request $request)
     {
-        $this->request = $request;
+        $this->games = $request->games;
+        $this->dateFrom = $request->dateFrom;
+        $this->dateTo = $request->dateTo;
     }
 
     public function streams()
     {
-        return response()->json(Stream::where('is_current', 1)->get()->toArray());
+        return response()->json(
+            Stream::where('is_current', 1)
+                ->when($games = $this->games, function ($query) use ($games) {
+                    return $query->whereIn('game', $games);
+                })
+                ->when($dateFrom = $this->dateFrom, function ($query) use ($dateFrom) {
+                    return $query->whereDate('created_at', '<=', $dateFrom);
+                })
+                ->when($dateTo = $this->dateTo, function ($query) use ($dateTo) {
+                    return $query->whereDate('created_at', '>=', $dateTo);
+                })
+                ->get()->toArray());
     }
 
     public function streamsCount()
     {
-        $count = Stream::where('is_current', 1)->pluck('game', 'viewer_count');
-
-        return 'test';
+        return response()->json(['count' => Stream::where('is_current', 1)->sum('viewer_count')]);
     }
 }
