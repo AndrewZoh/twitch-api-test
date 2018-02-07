@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Stream;
 
 class ApiController extends Controller
 {
@@ -15,11 +16,13 @@ class ApiController extends Controller
 
     public function streams()
     {
-        return 'test';
+        return response()->json(Stream::where('is_current', 1)->get()->toArray());
     }
 
     public function streamsCount()
     {
+        $count = Stream::where('is_current', 1)->pluck('game', 'viewer_count');
+
         return 'test';
     }
 }
