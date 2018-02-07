@@ -42,24 +42,27 @@ class StreamsLiveSync extends Command
         ];
         $twitchApi = new \TwitchApi\TwitchApi($options);
 
-        $games = new \App\Game();
-        $games = $games->all()->pluck('name');
+        $games = \App\Game::all()->pluck('name');
         $streams = [];
+
         foreach ($games as $game) {
             $limit = 100;
             $offset = 0;
+            $total = 0;
 
-            for ($total = 101; $total > $offset; $offset += $limit) {
+            do {
                 try {
                     $stream = $twitchApi->getLiveStreams(null, $game, null, 'live', $limit, $offset);
                     $total = $stream['_total'];
+                    $this->info('Request for '.$game.' live streams from '.$offset.' to '.($offset+$limit).' of total '.$total);
+                    $offset += $limit;
                     $streams = array_merge($stream['streams'], $streams);
                 } catch (\Exception $e) {
-                    $errorString = 'Error while syncing from '.$offset-$limit.' to '.$offset+$limit;
-                    $this->info($errorString);
+                    $errorString = 'Error while syncing '.$game.' live streams from '.$offset.' to '.($offset+$limit.' of total '.$total);
+                    $this->error($errorString);
                     \Log::error($errorString, [$e->getMessage(), $e->getTrace()]);
                 }
-            }
+            } while ($offset < $total);
         }
 
         \App\Stream::where('is_current', 1)
@@ -77,6 +80,5 @@ class StreamsLiveSync extends Command
 
         $this->info('Sync complete!');
         $this->info('Synced '.sizeof($streams).' streams!');
-
     }
 }
