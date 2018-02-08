@@ -2,19 +2,31 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Stream;
 
-class StreamsTest extends TestCase
+class StreamsTest extends ApiTestCase
 {
     /**
      * A basic test example.
      *
      * @return void
      */
-    public function testExample()
+    public function testStreamsSuccess()
     {
-        $this->assertTrue(true);
+        $response = $this->json('GET', '/api/streams');
+
+        $stream = Stream::take(20)->get()->random();
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'channel_id'       => $stream->channel_id,
+                'game'             => $stream->game,
+                'service'          => $stream->service,
+                'viewer_count'     => $stream->viewer_count,
+                'twitch_stream_id' => $stream->twitch_stream_id,
+                'is_current'       => $stream->is_current,
+                'sync_time'        => $stream->created_at->toDateTimeString(),
+            ]);
     }
 }

@@ -8,7 +8,7 @@ use App\Http\Resources\StreamResource;
 
 class ApiController extends Controller
 {
-    protected $games, $dateFrom, $dateTo, $page;
+    protected $games, $dateFrom, $dateTo, $page, $perPage;
 
     public function __construct(Request $request)
     {
@@ -16,6 +16,7 @@ class ApiController extends Controller
         $this->dateFrom = $request->dateFrom;
         $this->dateTo = $request->dateTo;
         $this->page = $request->page ?? 1;
+        $this->perPage = $request->perPage ?? 20;
     }
 
     /**
@@ -30,7 +31,7 @@ class ApiController extends Controller
     {
         $streams = Stream::games($this->games)
             ->byDate($this->dateFrom, $this->dateTo)
-            ->paginate(20, null, 'page', $this->page);
+            ->paginate($this->perPage, null, 'page', $this->page);
 
         return StreamResource::collection($streams);
     }

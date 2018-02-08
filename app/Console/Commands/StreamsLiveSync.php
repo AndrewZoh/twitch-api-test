@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Services\StreamService;
 
 class StreamsLiveSync extends Command
 {
@@ -25,9 +26,14 @@ class StreamsLiveSync extends Command
      *
      * @return void
      */
-    public function __construct()
+
+    protected $streamService;
+
+    public function __construct(StreamService $streamService)
     {
         parent::__construct();
+
+        $this->streamService = $streamService;
     }
 
     /**
@@ -37,48 +43,8 @@ class StreamsLiveSync extends Command
      */
     public function handle()
     {
-        $options = [
-            'client_id' => config('twitch.client_id'),
-        ];
-        $twitchApi = new \TwitchApi\TwitchApi($options);
-
-        $games = \App\Game::all()->pluck('name');
-        $streams = [];
-
-        foreach ($games as $game) {
-            $limit = 100;
-            $offset = 0;
-            $total = 0;
-
-            do {
-                try {
-                    $stream = $twitchApi->getLiveStreams(null, $game, null, 'live', $limit, $offset);
-                    $total = $stream['_total'];
-                    $this->info('Request for '.$game.' live streams from '.$offset.' to '.($offset+$limit).' of total '.$total);
-                    $offset += $limit;
-                    $streams = array_merge($stream['streams'], $streams);
-                } catch (\Exception $e) {
-                    $errorString = 'Error while syncing '.$game.' live streams from '.$offset.' to '.($offset+$limit.' of total '.$total);
-                    $this->error($errorString);
-                    \Log::error($errorString, [$e->getMessage(), $e->getTrace()]);
-                }
-            } while ($offset < $total);
-        }
-
-        \App\Stream::where('is_current', 1)
-            ->update(['is_current' => 0]);
-
-        foreach($streams as $stream) {
-            \App\Stream::create([
-                'game' => $stream['game'],
-                'channel_id' => $stream['channel']['_id'],
-                'viewer_count' => $stream['viewers'],
-                'twitch_stream_id' => $stream['_id'],
-                'is_current' => 1,
-            ]);
-        }
-
-        $this->info('Sync complete!');
-        $this->info('Synced '.sizeof($streams).' streams!');
+        $this->info('Sync started');
+        $this->streamService->syncLiveStreams();
+        $this->info('Sync completed');
     }
 }

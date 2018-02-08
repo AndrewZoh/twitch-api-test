@@ -21,6 +21,7 @@ class StreamResource extends Resource
             'viewer_count'     => $this->viewer_count,
             'twitch_stream_id' => $this->twitch_stream_id,
             'is_current'       => $this->is_current,
+            'sync_time'        => $this->created_at->toDateTimeString(),
         ];
     }
 }
