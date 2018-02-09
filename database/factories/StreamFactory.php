@@ -11,7 +11,7 @@ use Faker\Generator as Faker;
 $factory->define(App\Stream::class, function (Faker $faker) {
     return [
         'channel_id'       => $faker->numberBetween(1, 1000),
-        'game'             => $faker->title,
+        'game'             => $faker->word,
         'service'          => 'twitch',
         'viewer_count'     => $faker->numberBetween(1, 1000),
         'twitch_stream_id' => $faker->numberBetween(1, 1000),

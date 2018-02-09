@@ -2,19 +2,46 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Stream;
 
-class StreamsCountTest extends TestCase
+class StreamsCountTest extends ApiTestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testExample()
+    public function testStreamsCountAll()
     {
-        $this->assertTrue(true);
+        $count = Stream::where('is_current', 1)->get()->sum('viewer_count');
+
+        $response = $this->json('GET', '/api/streams/count');
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'viewer_count' => $count,
+            ]);
+    }
+
+    public function testStreamsCountOneGame()
+    {
+        $count = Stream::where('game', $this->games[0]->name)->get()->sum('viewer_count');
+
+        $response = $this->json('GET', '/api/streams/count?games[]='.$this->games[0]->name);
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'viewer_count' => $count,
+            ]);
+    }
+
+    public function testStreamsCountByDate()
+    {
+        $count = Stream::where('is_current', 0)->get()->sum('viewer_count');
+
+        $response = $this->json('GET', '/api/streams/count?dateTo[]='.date('Y-m-d H:i:s', strtotime('yesterday')));
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'viewer_count' => $count,
+            ]);
     }
 }

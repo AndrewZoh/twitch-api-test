@@ -12,6 +12,9 @@ class ApiController extends Controller
 
     public function __construct(Request $request)
     {
+//        $this->middleware('auth:api'); // мидлвар для авторизации
+        $this->middleware('whitelist:first_group'); // мидлвар для ограничения запросов по ip
+
         $this->games = $request->games;
         $this->dateFrom = $request->dateFrom;
         $this->dateTo = $request->dateTo;
@@ -40,7 +43,7 @@ class ApiController extends Controller
      * Вернет количество просмотров по переданным или всем играм
      * При запросе без дат вернет данные с последней синхронизации
      * При запросе с датами если попадают несколько записей одного стрима
-     * посчитает количество просмотров только для одного из этих стримов
+     * посчитает количество просмотров только для одного из этих стримов(первого)
      *
      * @return \Illuminate\Http\JsonResponse
      */

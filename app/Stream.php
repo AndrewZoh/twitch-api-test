@@ -59,10 +59,10 @@ class Stream extends Model
             return $query->where('is_current', 1);
         }
         if ($from) {
-            $query->where('created_at', '>', $from);
+            $query->where('created_at', '>=', $from);
         }
         if ($to) {
-            $query->where('created_at', '<', $to);
+            $query->where('created_at', '<=', $to);
         }
 
         return $query;
