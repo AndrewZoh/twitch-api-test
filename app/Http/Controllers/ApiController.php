@@ -6,13 +6,17 @@ use Illuminate\Http\Request;
 use App\Stream;
 use App\Http\Resources\StreamResource;
 
+/**
+ * Class ApiController
+ */
 class ApiController extends Controller
 {
     protected $games, $dateFrom, $dateTo, $page, $perPage;
 
     public function __construct(Request $request)
     {
-//        $this->middleware('auth:api'); // мидлвар для авторизации
+        // авторизация отключена
+        //$this->middleware('auth:api'); // мидлвар для авторизации
         $this->middleware('whitelist:first_group'); // мидлвар для ограничения запросов по ip
 
         $this->games = $request->games;
